@@ -32,12 +32,22 @@ export const MapPage = () => {
 
 
     const [createCarTask] = useCreateCarTaskMutation()
-    const {data: carPositionData} = useGetCarPositionQuery(undefined, {
+    const {data: carPositionData, error} = useGetCarPositionQuery(undefined, {
         pollingInterval: 1000,
         skip: false,
     });
 
-    const [jsonData] = useState(JSON.stringify(carPositionData) ?? '')
+    const [jsonData, setJsonData] = useState(JSON.stringify(carPositionData) ?? '')
+
+    useEffect(() => {
+        if (error) {
+            return
+        }
+
+        if (carPositionData) {
+            setJsonData(JSON.stringify(carPositionData));
+        }
+    }, [carPositionData]);
 
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
@@ -191,7 +201,7 @@ export const MapPage = () => {
             <Stack>
                 <Stack sx={{minHeight: '100px', backgroundColor: bgColors['300']}}>
                     <Typography>RESPONSE:</Typography>
-                    {jsonData && <Typography sx={{fontSize: '30px'}}>{jsonData}</Typography>}
+                    {jsonData && <Typography sx={{fontSize: '25px'}}>{jsonData}</Typography>}
                 </Stack>
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}
                        sx={{width: '100%', px: 2}}>
