@@ -11,6 +11,7 @@ import {  PropsWithChildren, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import MapIcon from '@mui/icons-material/Map';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {ROUTES} from "../../constants/routes.ts";
 
 
 export const LeftAside = () => {
@@ -28,7 +29,7 @@ export const LeftAside = () => {
     <Paper
       component={"aside"}
       sx={{
-        minWidth: "234px",
+        minWidth: "150px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -44,6 +45,13 @@ export const LeftAside = () => {
         >
           Map
         </AsideItem>
+          <AsideItem
+              url={ROUTES.map}
+              isActive={location.pathname === ROUTES.map}
+              icon={<MapIcon/>}
+          >
+              Map 2
+          </AsideItem>
 
       </Stack>
       <Stack sx={{ px: "15px" }}>
@@ -56,11 +64,12 @@ export const LeftAside = () => {
             justifyContent: "flex-start",
           }}
         >
+
+           <Stack>
+               <Typography>Status</Typography>
+           </Stack>
           <Stack direction={"row"} alignItems={"center"}>
             <LogoutIcon/>
-            <Typography fontWeight={400} textAlign={"left"}>
-              Log Out
-            </Typography>
           </Stack>
         </Button>
         <Divider />

@@ -1,60 +1,115 @@
-import { Button, Stack, TextField, Typography} from "@mui/material";
-import {useState} from "react";
+import officeRoomImage from '../../assets/mapImg.jpg';
+import { useEffect, useState } from 'react';
+import { Stage, Layer, Image as KonvaImage, Circle, Rect } from 'react-konva';
 
 export const MapPage = () => {
-    const [xValue, setXValue] = useState('');
-    const [yValue, setYValue] = useState('');
+    const [image, setImage] = useState<HTMLImageElement | null>(null);
+    const [markers, setMarkers] = useState<{ x: number; y: number }[]>([]);
 
-    const handleSendCoords = () => {
-        fetch('http://10.20.0.15:8888/order/send_coords_from_web', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                x: xValue,
-                y: yValue
-            })
-        })
+    // Real-world dimensions of the office room (in meters)
+    const realRoomWidth = 24.32; // Y dimension (horizontal)
+    const realRoomHeight = 18.55; // X dimension (vertical)
 
+    // Padding from the top
+    const paddingTop = 15;
+
+    // Boundary coordinates and dimensions based on image dimensions
+    const boundary = {
+        x: 40,
+        y: paddingTop,
+        width: window.innerWidth,
+        height: window.innerHeight - paddingTop,
     };
 
-    const handleGetCarCoords = () => {
-        fetch('http://10.20.0.15:8888/order/get_order_coords', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-    };
+    // Scaling factors to convert real-world coordinates to image coordinates
+    const scaleX = boundary.height / realRoomHeight;
+    const scaleY = boundary.width / realRoomWidth;
 
-    const handleGetRobotCoords = () => {
-        fetch('http://10.20.0.15:8888/car/car_data', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-    };
+    useEffect(() => {
+        const img = new window.Image();
+        img.src = officeRoomImage;
+        img.onload = () => {
+            setImage(img);
+        };
+    }, []);
 
+    // Convert real-world coordinates to image coordinates
+    const convertToImageCoordinates = (realX: number, realY: number) => ({
+        x: realX * scaleX,
+        y: realY * scaleY,
+    });
+
+    // Handler for placing markers with real-world coordinate scaling
+    const handleStageClick = (e: any) => {
+        const stage = e.target.getStage();
+        const pointerPosition = stage.getPointerPosition();
+
+        if (pointerPosition) {
+            const { x, y } = pointerPosition;
+
+            // Check if the point is inside the boundary
+            if (
+                x >= boundary.x &&
+                x <= boundary.x + boundary.width &&
+                y >= boundary.y &&
+                y <= boundary.y + boundary.height
+            ) {
+                // Adjust marker coordinates to real-world scaled coordinates
+                const adjustedX = (y - boundary.y) / scaleX;  // Convert to real-world X
+                const adjustedY = (x - boundary.x) / scaleY;  // Convert to real-world Y
+
+                setMarkers((prevMarkers) => [...prevMarkers, { x: adjustedX , y: adjustedY }]);
+
+                console.log("Marker position in JSON:", { x: adjustedX, y: adjustedY });
+            }
+        }
+    };
 
     return (
-        <>
-            <Stack direction="row">
-                <Stack sx={{width: '250px', border: '1px solid gray', p: 2, borderRadius: 3}}>
-                    <Typography>Create Task</Typography>
-                    <TextField placeholder={'x'}
-                               value={xValue}
-                               onChange={(e) => setXValue(e.target.value)}/>
-                    <TextField placeholder={'y'}
-                               value={yValue}
-                               onChange={(e) => setYValue(e.target.value)}/>
-                    <Button onClick={handleSendCoords}>Send robot coords</Button>
-                    <Button onClick={handleGetCarCoords}>Get order coords</Button>
-                    <Button onClick={handleGetRobotCoords}>Get robot coords</Button>
-                </Stack>
+        <Stage
+            width={window.innerWidth}
+            height={window.innerHeight}
+            onClick={handleStageClick}
+        >
+            <Layer>
+                {/* Render the background image */}
+                {image && (
+                    <KonvaImage
+                        image={image}
+                        x={0}
+                        y={0}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                    />
+                )}
 
-            </Stack>
-        </>
+                {/* Render the boundary rectangle */}
+                <Rect
+                    x={boundary.x}
+                    y={boundary.y}
+                    width={boundary.width}
+                    height={boundary.height}
+                    stroke="blue"
+                    strokeWidth={2}
+                    dash={[10, 5]}
+                />
+
+                {/* Render markers within the boundary */}
+                {markers.map((marker, index) => {
+                    const imageCoords = convertToImageCoordinates(marker.x, marker.y);
+                    return (
+                        <Circle
+                            key={index}
+                            x={imageCoords.y + boundary.x}  // Horizontal (Y) as x
+                            y={imageCoords.x + boundary.y}  // Vertical (X) as y
+                            radius={10}
+                            fill="red"
+                            stroke="black"
+                            strokeWidth={2}
+                        />
+                    );
+                })}
+            </Layer>
+        </Stage>
     );
 };
