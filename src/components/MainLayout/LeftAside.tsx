@@ -7,79 +7,79 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import {  PropsWithChildren, ReactNode } from "react";
-import { useLocation } from "react-router-dom";
+import {PropsWithChildren, ReactNode} from "react";
+import {useLocation} from "react-router-dom";
 import MapIcon from '@mui/icons-material/Map';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {ROUTES} from "../../constants/routes.ts";
 
 
 export const LeftAside = () => {
+    const location = useLocation();
 
+    const handleLogoutClick = () => {
+        console.log('logout')
+    };
 
-
-  const location = useLocation();
-
-
-  const handleLogoutClick = () => {
-      console.log('logout')
-  };
-
-  return (
-    <Paper
-      component={"aside"}
-      sx={{
-        minWidth: "150px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        px: 0,
-        py: 2,
-      }}
-    >
-      <Stack gap={0}>
-        <AsideItem
-          url={'/'}
-          isActive={location.pathname === '/'}
-          icon={<MapIcon/>}
+    return (
+        <Paper
+            component={"aside"}
+            sx={{
+                minWidth: "160px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                px: 0,
+                py: 2,
+            }}
         >
-          Map
-        </AsideItem>
-          <AsideItem
-              url={ROUTES.map}
-              isActive={location.pathname === ROUTES.map}
-              icon={<MapIcon/>}
-          >
-              Map 2
-          </AsideItem>
+            <Stack gap={0}>
+                <AsideItem
+                    url={'/'}
+                    isActive={location.pathname === '/'}
+                    icon={<MapIcon/>}
+                >
+                    Карта
+                </AsideItem>
+                <AsideItem
+                    url={ROUTES.map}
+                    isActive={location.pathname === ROUTES.map}
+                    icon={<MapIcon/>}
+                >
+                    Позиции
+                </AsideItem>
+                <AsideItem
+                    url={ROUTES.map}
+                    isActive={location.pathname === ROUTES.map}
+                    icon={<MapIcon/>}
+                >
+                    Статистика
+                </AsideItem>
 
-      </Stack>
-      <Stack sx={{ px: "15px" }}>
-        <Button
-          variant="text"
-          color="secondary"
-          size="small"
-          onClick={handleLogoutClick}
-          sx={{
-            justifyContent: "flex-start",
-          }}
-        >
+            </Stack>
+            <Stack sx={{px: "15px"}}>
+                <Button
+                    variant="text"
+                    color="secondary"
+                    size="small"
+                    onClick={handleLogoutClick}
+                    sx={{
+                        justifyContent: "flex-start",
+                    }}
+                >
 
-           <Stack>
-               <Typography>Status</Typography>
-           </Stack>
-          <Stack direction={"row"} alignItems={"center"}>
-            <LogoutIcon/>
-          </Stack>
-        </Button>
-        <Divider />
-        <Typography sx={{ color: (theme) => theme.palette.grey[300] }}>
-          version 0.0.1
-        </Typography>
-
-      </Stack>
-    </Paper>
-  );
+                    <Stack direction={"row"} alignItems={"center"}>
+                         Выход
+                        <LogoutIcon/>
+                    </Stack>
+                </Button>
+                <Divider/>
+                <Typography sx={{color: (theme) => theme.palette.grey[300]}}>
+                    version 0.0.1
+                </Typography>
+            </Stack>
+        </Paper>
+    );
 };
 
 const AsideItem = ({
@@ -129,7 +129,7 @@ const AsideItem = ({
                 </Icon>
                 <Typography
                     color={isActive ? "textSecondary" : "textPrimary"}
-                    sx={{ textDecoration: "none" }}
+                    sx={{textDecoration: "none"}}
                 >
                     {children}
                 </Typography>
