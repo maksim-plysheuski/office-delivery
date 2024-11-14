@@ -11,7 +11,7 @@ export const carApi = baseApi.injectEndpoints({
             })
         }),
         getCarPosition: builder.query<{ car_x: string, car_y: string, car_status: "busy" | 'ready' }, any>({
-            query: () => ({url: 'car/get_car_coords'})
+            query: () => ({url: 'car/car_data'})
         }),
     })
 })

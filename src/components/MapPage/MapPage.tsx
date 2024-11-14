@@ -30,11 +30,14 @@ export const MapPage = () => {
     const [progress, setProgress] = useState(0);
     const [initialDistance, setInitialDistance] = useState<number | null>(null);
 
+
     const [createCarTask] = useCreateCarTaskMutation()
     const {data: carPositionData} = useGetCarPositionQuery(undefined, {
         pollingInterval: 1000,
         skip: false,
     });
+
+    const [jsonData, setJsonData] = useState(JSON.stringify(carPositionData) ?? '')
 
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
@@ -186,7 +189,12 @@ export const MapPage = () => {
     return (
         <>
             <Stack>
-                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{width: '100%', px: 2}}>
+                <Stack sx={{minHeight: '100px', backgroundColor: bgColors['300']}}>
+                    <Typography>RESPONSE:</Typography>
+                    {jsonData && <Typography sx={{fontSize: '30px'}}>{jsonData}</Typography>}
+                </Stack>
+                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}
+                       sx={{width: '100%', px: 2}}>
                     <LocalShippingIcon/>
                     <FlagIcon/>
                 </Stack>
@@ -317,7 +325,7 @@ export const MapPage = () => {
                     </Stack>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color={'secondary'} >
+                    <Button onClick={handleClose} color={'secondary'}>
                         Закрыть
                     </Button>
                     <Button onClick={handleRequest} color="primary" disabled={carPositionData?.car_status!! === 'busy'}
