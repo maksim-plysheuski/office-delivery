@@ -37,7 +37,7 @@ export const MapPage = () => {
         skip: false,
     });
 
-    const [jsonData, setJsonData] = useState(JSON.stringify(carPositionData) ?? '')
+    const [jsonData] = useState(JSON.stringify(carPositionData) ?? '')
 
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
