@@ -103,11 +103,7 @@ const AsideItem = ({
     isActive?: boolean;
     icon?: ReactNode;
 }>) => {
-    const handleNewWindow = (
-        e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    ) => {
-        e.preventDefault();
-    };
+
 
     return (
         <MenuItem
