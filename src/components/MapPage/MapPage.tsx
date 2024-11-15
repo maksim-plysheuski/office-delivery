@@ -37,17 +37,8 @@ export const MapPage = () => {
         skip: false,
     });
 
-    const [jsonData, setJsonData] = useState(JSON.stringify(carPositionData) ?? '')
 
-    useEffect(() => {
-        if (error) {
-            return
-        }
 
-        if (carPositionData) {
-            setJsonData(JSON.stringify(carPositionData));
-        }
-    }, [carPositionData]);
 
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
@@ -111,8 +102,8 @@ export const MapPage = () => {
     });
 
 
-    // Define the list of static markers with their real-world coordinates in meters
-    const markers = [
+    // Define the list of static workPlaces with their real-world coordinates in meters
+    const workPlaces = [
         {place: 1, x: 1100, y: 1300},
         {place: 2, x: 2300, y: 1300},
         {place: 3, x: 3700, y: 1300},
@@ -200,15 +191,8 @@ export const MapPage = () => {
     return (
         <>
             <Stack>
-                <Stack sx={{minHeight: '100px', backgroundColor: bgColors['300']}}>
-                    <Typography>RESPONSE:</Typography>
-                    {jsonData && <Typography sx={{fontSize: '25px'}}>{jsonData}</Typography>}
-                </Stack>
-                <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}
-                       sx={{width: '100%', px: 2}}>
-                    <LocalShippingIcon/>
-                    <FlagIcon/>
-                </Stack>
+
+
                 <Box sx={{
                     height: '50px',
                     width: '100%',
@@ -221,8 +205,8 @@ export const MapPage = () => {
                 <Paper>
 
                     <Stage
-                        width={window.innerWidth - 230}
-                        height={window.innerHeight - 32}
+                        width={window.innerWidth - 310}
+                        height={window.innerHeight - 115}
                         style={{borderRadius: '16px'}}
                     >
                         <Layer>
@@ -248,8 +232,8 @@ export const MapPage = () => {
                                 dash={[10, 5]}
                             />
 
-                            {/* Render static markers with place number labels */}
-                            {markers.map((marker) => {
+                            {/* Render static workPlaces with place number labels */}
+                            {workPlaces.map((marker) => {
                                 const imageCoords = convertToImageCoordinates(marker.x, marker.y);
                                 return (
                                     <React.Fragment key={marker.place}>
@@ -304,10 +288,10 @@ export const MapPage = () => {
                             {movingMarker && markerImage && (
                                 <KonvaImage
                                     image={markerImage}
-                                    x={movingMarker.y + boundary.x - 55} // Adjust to center the image
-                                    y={movingMarker.x + boundary.y - 45} // Adjust to center the image
+                                    x={movingMarker.y + boundary.x - 35} // Adjust to center the image
+                                    y={movingMarker.x + boundary.y - 20} // Adjust to center the image
                                     width={170} // Width of the marker image
-                                    height={120} // Height of the marker image
+                                    height={110} // Height of the marker image
                                 />
                             )}
                         </Layer>
@@ -321,13 +305,17 @@ export const MapPage = () => {
                 <DialogContent>
                     {selectedMarker && (
                         <div>
-                            <p>Рабочее место: {selectedMarker.place}</p>
-                            <p>Координаты: X = {selectedMarker.x}, Y = {selectedMarker.y}</p>
+                            <Typography variant={'h3'}>Рабочее место: {selectedMarker.place}</Typography>
+
                         </div>
                     )}
                     <Stack direction="row" alignItems="center">
-                        <ErrorOutlineIcon color='error'/>
-                        <Typography color='error'>Курьер в пути, заказ не доступен</Typography>
+
+                        {carPositionData?.car_status!! === 'busy' && <>
+                            <ErrorOutlineIcon color='error'/>
+                            <Typography color='error'>Курьер в пути, заказ не доступен</Typography>
+                        </>}
+
                     </Stack>
                 </DialogContent>
                 <DialogActions>
@@ -348,12 +336,17 @@ export const MapPage = () => {
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
         <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <Box sx={{width: '100%', mr: 1}}>
-                <LinearProgress variant="determinate" {...props} />
-            </Box>
+            <Stack direction={'row'} alignItems={'center'} sx={{ mr: 1, width: '100%'}}>
+                <LocalShippingIcon/>
+                <Box sx={{ mr: 1, width: '100%'}}>
+                    <LinearProgress  variant="determinate" {...props} />
+                </Box>
+
+            </Stack>
             <Box sx={{minWidth: 35}}>
                 <Typography variant="body2" sx={{color: 'text.secondary'}}>{`${Math.round(props.value)}%`}</Typography>
             </Box>
+            <FlagIcon/>
         </Box>
     );
 }

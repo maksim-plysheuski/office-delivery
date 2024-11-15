@@ -1,5 +1,7 @@
-import {Paper, Stack, Typography} from "@mui/material";
+import {Box, Button, Paper, Stack, TextField, Typography} from "@mui/material";
 import {bgColors} from "../../constants";
+import {useState} from "react";
+import {BaseModal} from "../common/BaseModal.tsx";
 
 const places = [
     {place: 1, x: 1100, y: 1.3, name: "Ivan Ivanov"},
@@ -41,14 +43,62 @@ const places = [
 ];
 
 export const PlacesPage = () => {
+    const [isOpen, setIsOpen] = useState(false)
+
     return (
-        <Paper sx={{height: '100vh', overflow: 'auto'}}>
-            {places.map(place => (
-                <Stack sx={{display: 'grid', gridTemplateColumns: '2fr 2fr', height: '48px', p: 2, backgroundColor: bgColors['400'], border: `1px solid ${bgColors['100']}`}}>
-                    <Typography>{place.place}</Typography>
-                    <Typography>{place.name}</Typography>
+        <>
+            <Paper sx={{height: '100vh', mr: 2, pt: 0, overflow: 'auto'}}>
+                <Stack sx={{width: '100%', p: 2}} alignItems={'flex-end'}>
+                    <Button sx={{width: '200px'}} onClick={() => setIsOpen(prev => !prev)}>Добавить место</Button>
                 </Stack>
-            ))}
-        </Paper>
+                <Box>
+                    <Stack alignItems={'center'} sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '2fr 2fr',
+                        height: '48px',
+                        border: `1px solid ${bgColors['100']}`,
+                        p: 2,
+                        position: 'sticky',
+                        top: 0,
+                        backgroundColor: bgColors['200'],
+                        borderRadiusTopLeft: 4,
+                        borderRadiusTopRight: 4
+                    }}>
+                        <Typography variant={'h3'}>Номер места</Typography>
+                        <Typography variant={'h3'}>ФИО сотрудника</Typography>
+                    </Stack>
+
+                    {places.map(place => (
+                        <Stack sx={{
+                            display: 'grid',
+                            gridTemplateColumns: '2fr 2fr',
+                            height: '48px',
+                            p: 2,
+                            backgroundColor: bgColors['400'],
+                            border: `1px solid ${bgColors['100']}`
+                        }}>
+                            <Typography>{place.place}</Typography>
+                            <Typography>{place.name}</Typography>
+                        </Stack>
+                    ))}
+                </Box>
+            </Paper>
+
+            <BaseModal open={isOpen}
+                       title={'Добввить новое место'}
+                       onClose={() => setIsOpen(false)}
+                       onCancel={() => setIsOpen(false)}
+                       onSubmit={() => setIsOpen(true)}
+                       submitText={'Добавить'}
+            >
+                <Stack sx={{width: '350px', p: 2}} gap={2}>
+                    <TextField label={'Номер места'} required={true} placeholder={'Введите номер места'}
+                               type={'number'}/>
+                    <TextField label={'Кордината X'} required={true} placeholder={'Введите координату X'}/>
+                    <TextField label={'Кордината Y'} required={true} placeholder={'Введите координату Y'}/>
+                    <TextField label={'Фио сотрудника'} required={true} placeholder={'Введите ФИО'}/>
+                </Stack>
+            </BaseModal>
+        </>
     );
 };

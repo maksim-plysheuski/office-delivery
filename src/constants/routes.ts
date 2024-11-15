@@ -1,5 +1,7 @@
 export const ROUTES = {
   root: "/",
-  positions: "/positions",
-  statistic: "/statistic",
+  map: "/map",
+  places: "/places",
+  users: "/users",
+  history: "/history",
 };
