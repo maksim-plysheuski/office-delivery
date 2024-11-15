@@ -32,7 +32,7 @@ export const MapPage = () => {
 
 
     const [createCarTask] = useCreateCarTaskMutation()
-    const {data: carPositionData, error} = useGetCarPositionQuery(undefined, {
+    const {data: carPositionData} = useGetCarPositionQuery(undefined, {
         pollingInterval: 1000,
         skip: false,
     });
