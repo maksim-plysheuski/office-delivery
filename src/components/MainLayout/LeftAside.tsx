@@ -1,31 +1,48 @@
 import {
     Button,
     Divider,
-    Icon, Link,
+    Icon,
     MenuItem,
     Paper,
-    Stack,
+    Stack, Theme,
     Typography,
 } from "@mui/material";
-import {PropsWithChildren, ReactNode} from "react";
-import {useLocation} from "react-router-dom";
+import {forwardRef, MouseEvent, PropsWithChildren, ReactNode} from "react";
+import { Link as RouterLink, LinkProps, useLocation } from "react-router-dom";
+import {ROUTES} from "../../constants/routes.ts";
 import MapIcon from '@mui/icons-material/Map';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {ROUTES} from "../../constants/routes.ts";
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
+
+const CustomLink = forwardRef<HTMLAnchorElement, LinkProps>(
+    ({ to, onClick, ...rest }, ref) => {
+        const handleClick = (
+            e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>,
+        ) => {
+
+            onClick?.(e);
+        };
+
+        return <RouterLink to={to} onClick={handleClick} {...rest} ref={ref} />;
+    },
+);
 
 
 export const LeftAside = () => {
+
+
     const location = useLocation();
 
+
     const handleLogoutClick = () => {
-        console.log('logout')
+        console.log('log out')
     };
 
     return (
         <Paper
             component={"aside"}
             sx={{
-                minWidth: "160px",
+                minWidth: "234px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -35,29 +52,22 @@ export const LeftAside = () => {
         >
             <Stack gap={0}>
                 <AsideItem
-                    url={'/'}
-                    isActive={location.pathname === '/'}
+                    url={ROUTES.root}
+                    isActive={location.pathname === ROUTES.root}
                     icon={<MapIcon/>}
                 >
-                    Карта
+                    <Typography>Карта</Typography>
                 </AsideItem>
                 <AsideItem
-                    url={ROUTES.map}
-                    isActive={location.pathname === ROUTES.map}
-                    icon={<MapIcon/>}
+                    url={ROUTES.positions}
+                    isActive={location.pathname === ROUTES.positions}
+                    icon={<PersonPinCircleIcon/>}
                 >
-                    Позиции
-                </AsideItem>
-                <AsideItem
-                    url={ROUTES.map}
-                    isActive={location.pathname === ROUTES.map}
-                    icon={<MapIcon/>}
-                >
-                    Статистика
+                    <Typography>Места</Typography>
                 </AsideItem>
 
             </Stack>
-            <Stack sx={{px: "15px"}}>
+            <Stack sx={{ px: "15px" }}>
                 <Button
                     variant="text"
                     color="secondary"
@@ -67,15 +77,16 @@ export const LeftAside = () => {
                         justifyContent: "flex-start",
                     }}
                 >
-
                     <Stack direction={"row"} alignItems={"center"}>
-                         Выход
-                        <LogoutIcon/>
+                        <LogoutIcon />
+                        <Typography fontWeight={400} textAlign={"left"}>
+                            Выход
+                        </Typography>
                     </Stack>
                 </Button>
-                <Divider/>
-                <Typography sx={{color: (theme) => theme.palette.grey[300]}}>
-                    version 0.0.1
+                <Divider />
+                <Typography sx={{ color: (theme) => theme.palette.grey[300] }}>
+                    version 1.0.1
                 </Typography>
             </Stack>
         </Paper>
@@ -84,6 +95,7 @@ export const LeftAside = () => {
 
 const AsideItem = ({
                        children,
+                       url,
                        isActive,
                        icon,
                    }: PropsWithChildren<{
@@ -91,12 +103,16 @@ const AsideItem = ({
     isActive?: boolean;
     icon?: ReactNode;
 }>) => {
-
+    const handleNewWindow = (
+        e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    ) => {
+        e.preventDefault();
+    };
 
     return (
         <MenuItem
-            component={Link}
-            //to={url}
+            component={CustomLink}
+            to={url}
             sx={{
                 justifyContent: "space-between",
                 px: "20px",
@@ -105,7 +121,7 @@ const AsideItem = ({
                 backgroundColor: isActive ? "#25252E" : undefined,
                 borderRight: "2px solid",
                 borderRightColor: isActive
-                    ? (theme) => theme.palette.primary.main
+                    ? (theme: Theme) => theme.palette.primary.main
                     : "transparent",
                 transition: "border-color 0.2s, background-color 0.1s",
                 "&:hover .new-window-container": {
@@ -129,7 +145,7 @@ const AsideItem = ({
                 </Icon>
                 <Typography
                     color={isActive ? "textSecondary" : "textPrimary"}
-                    sx={{textDecoration: "none"}}
+                    sx={{ textDecoration: "none" }}
                 >
                     {children}
                 </Typography>

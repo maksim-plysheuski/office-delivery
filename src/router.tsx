@@ -4,6 +4,7 @@ import {
 import {MainLayout} from "./components/MainLayout/MainLayout.tsx";
 import {MapPage} from "./components/MapPage/MapPage.tsx";
 import {ROUTES} from "./constants/routes.ts";
+import {PlacesPage} from "./components/Places/PlacesPage.tsx";
 
 
 
@@ -14,6 +15,7 @@ export const router = (createBrowserRouter)([
     ),
     children: [
       { path: ROUTES.root, element: <MapPage /> },
+      { path: ROUTES.positions, element: <PlacesPage/> },
     ],
   },
 ]);
