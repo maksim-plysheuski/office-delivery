@@ -285,7 +285,7 @@ export const MapPage = () => {
                                     image={markerImage}
                                     x={movingMarker.y + boundary.x - 35} // Adjust to center the image
                                     y={movingMarker.x + boundary.y - 20} // Adjust to center the image
-                                    width={130} // Width of the marker image
+                                    width={115} // Width of the marker image
                                     height={70} // Height of the marker image
                                 />
                             )}
