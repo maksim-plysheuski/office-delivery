@@ -44,12 +44,15 @@ export const MapPage = () => {
         return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
     };
 
+   
+    console.log(movingMarker)
 
     useEffect(() => {
         if (carPositionData) {
             const {car_x, car_y} = carPositionData;
-            const imageCoords = convertToImageCoordinates(+car_x, +car_y)
-            setMovingMarker(imageCoords)
+            //const imageCoords = convertToImageCoordinates(+car_x, +car_y)
+            console.log(carPositionData)
+            setMovingMarker({x: +car_x, y: +car_y})
         }
     }, [carPositionData]);
 
