@@ -38,8 +38,6 @@ export const MapPage = () => {
     });
 
 
-
-
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
     const calculateDistance = (point1: { x: number; y: number }, point2: { x: number; y: number }) => {
@@ -191,8 +189,6 @@ export const MapPage = () => {
     return (
         <>
             <Stack>
-
-
                 <Box sx={{
                     height: '50px',
                     width: '100%',
@@ -203,7 +199,6 @@ export const MapPage = () => {
                     <LinearProgressWithLabel value={progress}/>
                 </Box>
                 <Paper>
-
                     <Stage
                         width={window.innerWidth - 310}
                         height={window.innerHeight - 115}
@@ -290,8 +285,8 @@ export const MapPage = () => {
                                     image={markerImage}
                                     x={movingMarker.y + boundary.x - 35} // Adjust to center the image
                                     y={movingMarker.x + boundary.y - 20} // Adjust to center the image
-                                    width={170} // Width of the marker image
-                                    height={110} // Height of the marker image
+                                    width={115} // Width of the marker image
+                                    height={70} // Height of the marker image
                                 />
                             )}
 
