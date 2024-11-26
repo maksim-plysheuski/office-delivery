@@ -37,7 +37,7 @@ export const LeftAside = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const {data: carPositionData, error} = useGetCarPositionQuery(undefined, {
-        pollingInterval: 1000,
+        pollingInterval: 500,
         skip: false,
     });
     const [createCarTask] = useCreateCarTaskMutation()
