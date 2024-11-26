@@ -292,6 +292,7 @@ export const MapPage = () => {
                                     height={70} // Height of the marker image
                                 />
                             )}
+
                         </Layer>
                     </Stage>
                 </Paper>
