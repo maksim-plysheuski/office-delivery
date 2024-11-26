@@ -33,7 +33,7 @@ export const MapPage = () => {
 
     const [createCarTask] = useCreateCarTaskMutation()
     const {data: carPositionData} = useGetCarPositionQuery(undefined, {
-        pollingInterval: 1000,
+        pollingInterval: 500,
         skip: false,
     });
 
@@ -294,6 +294,7 @@ export const MapPage = () => {
                                     height={110} // Height of the marker image
                                 />
                             )}
+
                         </Layer>
                     </Stage>
                 </Paper>
