@@ -39,7 +39,6 @@ export const MapPage = () => {
 
 
 
-
     const [movingMarker, setMovingMarker] = useState<{ x: number; y: number } | null>(null);
 
     const calculateDistance = (point1: { x: number; y: number }, point2: { x: number; y: number }) => {
@@ -51,6 +50,8 @@ export const MapPage = () => {
         if (carPositionData) {
             const {car_x, car_y} = carPositionData;
             const imageCoords = convertToImageCoordinates(+car_x, +car_y)
+
+            console.log('crocodile', imageCoords)
             setMovingMarker(imageCoords)
         }
     }, [carPositionData]);
